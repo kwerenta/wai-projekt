@@ -1,0 +1,15 @@
+{
+    "name": "kamil/wai-projekt",
+    "authors": [
+        {
+            "name": "Kamil Wenta",
+            "email": "s193437@pg.edu.pl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {}
+}
