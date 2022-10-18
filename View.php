@@ -4,17 +4,20 @@ namespace app;
 
 class View
 {
-    public function render($viewName) {
+    public function render($viewName)
+    {
         $layoutName = Application::$app->controller->layout;
 
-        ob_start();
-        include_once __DIR__ . "/views/layouts/" . $layoutName . ".php";
-        $layout = ob_get_clean();
-
-        ob_start();
-        include_once __DIR__ . "/views/" . $viewName . ".php";
-        $view = ob_get_clean();
+        $layout = $this->getContent("layouts/$layoutName");
+        $view = $this->getContent($viewName);
 
         echo str_replace("{{yield}}", $view, $layout);
+    }
+
+    private function getContent($path)
+    {
+        ob_start();
+        include_once __DIR__ . "/views/" . $path . ".php";
+        return ob_get_clean();
     }
 }
