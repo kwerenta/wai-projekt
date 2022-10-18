@@ -4,5 +4,5 @@ namespace app\controllers;
 
 class ApplicationController
 {
-    protected $layout = "application";
+    public $layout = "application";
 }

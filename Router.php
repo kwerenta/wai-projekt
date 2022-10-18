@@ -23,7 +23,7 @@ class Router
             $method = $_SERVER["REQUEST_METHOD"];
             $path = explode("?", $_SERVER["REQUEST_URI"])[0];
 
-            if ($route["path"] == $path && ($method == "GET")) {
+            if ($route["path"] == $path && $method == ($route["method"] ?? "GET")) {
                 $controllerEntry = explode("::", $route["controller"]);
 
                 $controllerClass = "app\controllers\\" . $controllerEntry[0];
@@ -31,6 +31,8 @@ class Router
 
                 Application::$app->controller = new $controllerClass;
                 Application::$app->controller->$controllerAction();
+
+                Application::$app->view->render($controllerAction);
                 return true;
             }
         }

@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-class BaseController
+class BaseController extends ApplicationController
 {
     public function index() {
         echo "root page";

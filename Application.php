@@ -7,6 +7,7 @@ class Application
     public static $app;
     public $router;
     public $db;
+    public $view;
     public $controller = null;
 
     public function __construct()
@@ -15,7 +16,6 @@ class Application
 
         $this->router = new Router();
         $this->db = new Database([]);
+        $this->view = new View();
     }
-
-
 }
