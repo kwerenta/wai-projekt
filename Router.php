@@ -21,18 +21,23 @@ class Router
     {
         foreach ($this->getRoutes() as $route) {
             $method = $_SERVER["REQUEST_METHOD"];
-            $path = explode("?", $_SERVER["REQUEST_URI"])[0];
+            $path = trim(explode("?", $_SERVER["REQUEST_URI"])[0], "/");
 
-            if ($route["path"] == $path && $method == ($route["method"] ?? "GET")) {
-                $controllerEntry = explode("::", $route["controller"]);
+            if (trim($route["path"], "/") == $path && $method == ($route["method"] ?? "GET")) {
+                [$controllerClassName, $controllerAction] = explode("::", $route["controller"]);
 
-                $controllerClass = "app\controllers\\" . $controllerEntry[0];
-                $controllerAction = $controllerEntry[1];
+                $controllerClass = "app\controllers\\" . $controllerClassName;
+
+                $controllerNamespace = substr($controllerClassName, 0, strrpos($controllerClassName, "\\"));
+                if (!empty($controllerNamespace)) {
+                    $controllerNamespace = str_replace("\\", "/", $controllerNamespace);
+                    $controllerNamespace .= "/";
+                }
 
                 Application::$app->controller = new $controllerClass;
                 Application::$app->controller->$controllerAction();
 
-                Application::$app->view->render($controllerAction);
+                Application::$app->view->render($controllerNamespace . $controllerAction);
                 return true;
             }
         }
