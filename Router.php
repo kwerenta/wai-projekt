@@ -28,16 +28,8 @@ class Router
 
                 $controllerClass = "app\controllers\\" . $controllerClassName;
 
-                $controllerNamespace = substr($controllerClassName, 0, strrpos($controllerClassName, "\\"));
-                if (!empty($controllerNamespace)) {
-                    $controllerNamespace = str_replace("\\", "/", $controllerNamespace);
-                    $controllerNamespace .= "/";
-                }
-
                 Application::$app->controller = new $controllerClass;
                 Application::$app->controller->$controllerAction();
-
-                Application::$app->view->render($controllerNamespace . $controllerAction);
                 return true;
             }
         }
