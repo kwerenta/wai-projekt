@@ -17,6 +17,20 @@ class Router
         return $this->routes;
     }
 
+    public function getPath($routeName, $params = []): string {
+        foreach ($this->getRoutes() as $name => $route) {
+            if($routeName == $name) {
+                $url = $route["path"];
+
+                foreach ($params as $key => $value){
+                    $url = str_replace("{{$key}}", $value ,$url);
+                }
+                return $url;
+            }
+        }
+        return "#";
+    }
+
     public function resolveRoute(): bool
     {
         foreach ($this->getRoutes() as $route) {

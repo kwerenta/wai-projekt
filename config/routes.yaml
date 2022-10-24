@@ -1,6 +1,9 @@
 root:
   path: "/"
   controller: BaseController::index
-show_photos:
+index_photos:
   path: "/photos"
+  controller: photos\PhotosController::index
+show_photos:
+  path: "/photos/{id}"
   controller: photos\PhotosController::show
