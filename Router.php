@@ -5,6 +5,7 @@ namespace app;
 class Router
 {
     private $routes;
+    private $currentRoute;
 
     public function __construct()
     {
@@ -15,6 +16,10 @@ class Router
     public function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    public function getCurrentRoute() {
+        return $this->currentRoute;
     }
 
     public function getPath($routeName, $params = []): string {
@@ -38,12 +43,12 @@ class Router
             $path = trim(explode("?", $_SERVER["REQUEST_URI"])[0], "/");
 
             if (trim($route["path"], "/") == $path && $method == ($route["method"] ?? "GET")) {
-                [$controllerClassName, $controllerAction] = explode("::", $route["controller"]);
+                $this->currentRoute = $route;
+                [$class, $action] = explode("::", $route["controller"]);
 
-                $controllerClass = "app\controllers\\" . $controllerClassName;
+                $namespace = substr($class, 0, strrpos($class, "\\"));
 
-                Application::$app->controller = new $controllerClass;
-                Application::$app->controller->$controllerAction();
+                $this->currentRoute["controller"] = compact("class", "action", "namespace");
                 return true;
             }
         }

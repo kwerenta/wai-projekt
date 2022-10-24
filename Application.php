@@ -7,8 +7,7 @@ class Application
     public static $app;
     public $router;
     public $db;
-    public $view;
-    public $controller = null;
+    public $controller;
 
     public function __construct()
     {
@@ -16,6 +15,23 @@ class Application
 
         $this->router = new Router();
         $this->db = new Database([]);
-        $this->view = new View();
+    }
+
+    public function start() {
+        if($this->router->resolveRoute()) {
+            $controller = $this->router->getCurrentRoute()["controller"];
+
+            $controllerClass = "app\controllers\\" . $controller["class"];
+            $this->controller = new $controllerClass;
+
+            $view = new View();
+
+            $action = $controller["action"];
+            $this->controller->$action($view);
+
+            echo $view->render($controller["namespace"] . "/" . $controller["action"]);
+        } else {
+            echo "<h1>Page not found.</h1>";
+        }
     }
 }

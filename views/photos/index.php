@@ -1,0 +1,1 @@
+<h1>views/photos/index.php</h1>
