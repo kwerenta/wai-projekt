@@ -5,18 +5,23 @@ namespace app;
 class View
 {
     private $data = [];
+    private $layoutName;
+
+    public function __construct($layoutName)
+    {
+        $this->layoutName = $layoutName;
+    }
 
     public function render($viewName, $params = [])
     {
-        $layoutName = Application::$app->controller->layout;
-
-        $layout = $this->getContent("layouts/$layoutName");
+        $layout = $this->getContent("layouts/$this->layoutName");
         $view = $this->getContent($viewName, $params);
 
         return str_replace("{{yield}}", $view, $layout);
     }
 
-    public function addData($values) {
+    public function addData($values)
+    {
         $this->data = array_merge($this->data, $values);
     }
 

@@ -17,19 +17,18 @@ class Application
         $this->db = new Database([]);
     }
 
-    public function start() {
-        if($this->router->resolveRoute()) {
+    public function start()
+    {
+        if ($this->router->resolveRoute()) {
             $controller = $this->router->getCurrentRoute()["controller"];
 
             $controllerClass = "app\controllers\\" . $controller["class"];
             $this->controller = new $controllerClass;
 
-            $view = new View();
-
             $action = $controller["action"];
-            $this->controller->$action($view);
+            $this->controller->$action();
 
-            echo $view->render($controller["namespace"] . "/" . $controller["action"]);
+            echo $this->controller->view->render($controller["namespace"] . "/" . $controller["action"]);
         } else {
             echo "<h1>Page not found.</h1>";
         }
