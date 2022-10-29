@@ -6,6 +6,7 @@ class Router
 {
     private $routes;
     private $currentRoute;
+    private $params = [];
 
     public function __construct()
     {
@@ -13,22 +14,29 @@ class Router
         $this->routes = yaml_parse_file($routesPath);
     }
 
-    public function getCurrentRoute() {
+    public function getCurrentRoute()
+    {
         return $this->currentRoute;
     }
 
-    public function getPath($routeName, $params = []): string {
+    public function getPath($routeName, $params = []): string
+    {
         foreach ($this->routes as $name => $route) {
-            if($routeName == $name) {
+            if ($routeName == $name) {
                 $url = $route["path"];
 
-                foreach ($params as $key => $value){
-                    $url = str_replace(sprintf("{%s}", $key), $value ,$url);
+                foreach ($params as $key => $value) {
+                    $url = str_replace(sprintf("{%s}", $key), $value, $url);
                 }
                 return $url;
             }
         }
         return "#";
+    }
+
+    public function getParams(): array
+    {
+        return $this->params;
     }
 
     public function resolveRoute(): bool
@@ -50,19 +58,32 @@ class Router
         return false;
     }
 
-    private function comparePaths($sourcePath, $targetPath, $method): bool {
-        if($_SERVER["REQUEST_METHOD"] != $method) return false;
-        if($sourcePath == $targetPath) return true;
+    private function comparePaths($sourcePath, $targetPath, $method): bool
+    {
+        if ($_SERVER["REQUEST_METHOD"] != $method) return false;
+        if ($sourcePath == $targetPath) return true;
 
         $explodedSourcePath = explode("/", $sourcePath);
         $explodedTargetPath = explode("/", $targetPath);
 
-        if(count($explodedSourcePath) != count($explodedTargetPath)) return false;
+        if (count($explodedSourcePath) != count($explodedTargetPath)) return false;
 
-        foreach (array_combine($explodedSourcePath, $explodedTargetPath) as $source => $target) {
-            if(!($source == $target || (!empty($target) && $target[0] == "{" && $target[-1] == "}"))) return false;
+        foreach (array_combine($explodedSourcePath, $explodedTargetPath) as $sourceSegment => $targetSegment) {
+            if ($this->isParam($targetSegment)) {
+                $this->params[substr($targetSegment, 1, strlen($targetSegment) - 2)] = $sourceSegment;
+                continue;
+            }
+            if ($sourceSegment != $targetSegment) {
+                $this->params = [];
+                return false;
+            }
         }
 
         return true;
+    }
+
+    private function isParam($segment): bool
+    {
+        return !empty($segment) && $segment[0] == "{" && $segment[-1] == "}";
     }
 }

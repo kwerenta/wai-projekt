@@ -7,11 +7,11 @@ use app\controllers\ApplicationController;
 class PhotosController extends ApplicationController
 {
     public function index() {
-        echo "index photos";
+        echo "all photos";
     }
 
     public function show()
     {
-        echo "show photos";
+        echo "photo id " . $this->params["id"];
     }
 }

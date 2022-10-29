@@ -23,7 +23,7 @@ class Application
             $controller = $this->router->getCurrentRoute()["controller"];
 
             $controllerClass = "app\controllers\\" . $controller["class"];
-            $this->controller = new $controllerClass;
+            $this->controller = new $controllerClass($this->router->getParams());
 
             $action = $controller["action"];
             $this->controller->$action();
