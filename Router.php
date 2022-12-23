@@ -47,7 +47,10 @@ class Router
 
             if ($this->comparePaths($path, $route["path"], $route["method"] ?? "GET")) {
                 $this->currentRoute = $route;
-                [$class, $action] = explode("::", $route["controller"]);
+
+                $explodedController = explode("::", $route["controller"]);
+                $class = $explodedController[0];
+                $action = $explodedController[1];
 
                 $namespace = substr($class, 0, strrpos($class, "\\"));
 
@@ -84,6 +87,6 @@ class Router
 
     private function isParam($segment): bool
     {
-        return !empty($segment) && $segment[0] == "{" && $segment[-1] == "}";
+        return !empty($segment) && $segment[0] == "{" && $segment[strlen($segment) - 1] == "}";
     }
 }
