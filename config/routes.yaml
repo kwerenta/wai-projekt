@@ -4,6 +4,10 @@ root:
 index_photos:
   path: "/photos"
   controller: photos\PhotosController::index
+create_photo:
+  path: "/photos"
+  method: "POST"
+  controller: photos\PhotosController::create
 show_photo:
   path: "/photos/{id}"
   controller: photos\PhotosController::show

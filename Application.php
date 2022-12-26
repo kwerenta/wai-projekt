@@ -30,7 +30,10 @@ class Application
             $action = $controller["action"];
             $this->controller->$action();
 
-            echo $this->controller->view->render($controller["namespace"] . "/" . $controller["action"]);
+            if (strcasecmp($this->router->getCurrentRoute()["method"] ?? "GET", "GET") == 0)
+                echo $this->controller->view->render($controller["namespace"] . "/" . $controller["action"]);
+            else
+                echo "This is not GET request.";
         } else {
             echo "<h1>Page not found.</h1>";
         }

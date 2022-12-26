@@ -15,6 +15,4 @@ class ApplicationController
         $this->view = new View($this->layout);
         $this->params = $params;
     }
-
-
 }
