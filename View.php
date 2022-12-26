@@ -5,17 +5,19 @@ namespace app;
 class View
 {
     private $data = [];
+    private $viewName;
     private $layoutName;
 
-    public function __construct($layoutName)
+    public function __construct($viewName, $layoutName)
     {
+        $this->viewName = $viewName;
         $this->layoutName = $layoutName;
     }
 
-    public function render($viewName, $params = [])
+    public function render($params = [])
     {
         $layout = $this->getContent("layouts/$this->layoutName");
-        $view = $this->getContent($viewName, $params);
+        $view = $this->getContent($this->viewName, $params);
 
         return str_replace("{{yield}}", $view, $layout);
     }

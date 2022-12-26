@@ -15,8 +15,6 @@ class Application
 
         $this->router = new Router();
         $this->db = new Database();
-
-        $this->db->getUsers();
     }
 
     public function start()
@@ -25,13 +23,13 @@ class Application
             $controller = $this->router->getCurrentRoute()["controller"];
 
             $controllerClass = "app\controllers\\" . $controller["class"];
-            $this->controller = new $controllerClass($this->router->getParams());
-
             $action = $controller["action"];
+
+            $this->controller = new $controllerClass($controller["namespace"], $action, $this->router->getParams());
             $this->controller->$action();
 
             if (strcasecmp($this->router->getCurrentRoute()["method"] ?? "GET", "GET") == 0)
-                echo $this->controller->view->render($controller["namespace"] . "/" . $controller["action"]);
+                echo $this->controller->view->render();
             else
                 echo "This is not GET request.";
         } else {

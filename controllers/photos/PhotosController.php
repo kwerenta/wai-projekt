@@ -8,12 +8,11 @@ class PhotosController extends ApplicationController
 {
     public function index()
     {
-        echo "all photos";
     }
 
     public function show()
     {
-        echo "photo id " . $this->params["id"];
+        $this->view->addData(["id" => $this->params["id"]]);
     }
 
     public function create()

@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+body {
+  background-color: #10141f;
+  color: white;
+  font-family: "Verdana", sans-serif;
+  display: flex;
+}
+
+nav {
+  background-color: #161d2f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 5.5rem;
+  height: calc(100vh - 4rem);
+  margin: 2rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+}
+
+nav > div {
+  font-size: 1.25rem;
+}
+
+.nav-logo {
+  margin-bottom: 3rem;
+}
+
+.nav-logo a {
+  color: #fe4646;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.nav-items {
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: #5a6c93;
+}
+
+.nav-items > a {
+  color: #5a6c93;
+}
+
+.nav-items a:hover {
+  color: #fff;
+}
+
+.nav-items a > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.nav-user a {
+  color: green;
+}
+
+.nav-user a > svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+main {
+  flex: 1;
+  padding-top: 0.5rem;
+}
