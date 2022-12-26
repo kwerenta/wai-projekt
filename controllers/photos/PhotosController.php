@@ -3,11 +3,14 @@
 namespace app\controllers\photos;
 
 use app\controllers\ApplicationController;
+use app\models\Photo;
 
 class PhotosController extends ApplicationController
 {
     public function index()
     {
+        $photos = Photo::all();
+        $this->view->addData(["photos" => $photos]);
     }
 
     public function show()

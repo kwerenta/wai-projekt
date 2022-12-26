@@ -14,7 +14,6 @@ class Application
         self::$app = $this;
 
         $this->router = new Router();
-        $this->db = new Database();
     }
 
     public function start()
