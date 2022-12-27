@@ -28,13 +28,13 @@ class PhotosController extends ApplicationController
 		$targetPath = IMAGES_PATH . basename($file["name"]);;
 
 		if ($file["error"] !== 0) {
-			echo "Error occured.";
+			$_SESSION["errors"][] = "File wasn't uploaded correctly.";
+			header("Location: /");
 			return;
 		}
 
 		if (filesize($file["tmp_name"]) > 1000000) {
-			echo "Max file size is 1MB.";
-			return;
+			$_SESSION["errors"][] = "Max file size is 1MB.";
 		}
 
 		$mimeType = mime_content_type($file["tmp_name"]);
@@ -44,12 +44,13 @@ class PhotosController extends ApplicationController
 		} else if ($mimeType === "image/png") {
 			$image = imagecreatefrompng($file["tmp_name"]);
 		} else {
-			echo "Invalid File type";
-			return;
+			$_SESSION["errors"][] = "Invalid File type.";
 		}
 
-		if ($image == NULL || $image == false)
+		if (count($_SESSION["errors"]) > 0 || !$image) {
 			header("Location: /");
+			return;
+		};
 
 		$thumbnail = imagescale($image, 200, 125);
 		imagepng($thumbnail, IMAGES_PATH . "thumbnail_" . basename($file["name"]));
@@ -60,10 +61,8 @@ class PhotosController extends ApplicationController
 		$photo = new Photo($_POST["title"], basename($file["name"]), $_POST["author"]);
 		$photo->save();
 
-		if (move_uploaded_file($file["tmp_name"], $targetPath))
-			header("Location: /photos");
-		else
-			header("Location: /");
+		move_uploaded_file($file["tmp_name"], $targetPath);
+		header("Location: /photos");
 	}
 
 	private function createWatermark($image, $name)

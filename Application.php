@@ -14,6 +14,8 @@ class Application
         self::$app = $this;
 
         $this->router = new Router();
+
+        session_start();
     }
 
     public function start()
