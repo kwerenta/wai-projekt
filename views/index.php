@@ -6,6 +6,8 @@ if (isset($_SESSION['errors'])) {
   }
   unset($_SESSION['errors']);
 }
+if (isset($_SESSION["user"]))
+  echo $_SESSION["user"];
 ?>
 <form method="POST" action="/photos" enctype="multipart/form-data">
   <div>

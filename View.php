@@ -27,6 +27,11 @@ class View
         $this->data = array_merge($this->data, $values);
     }
 
+    public function setName($name)
+    {
+        $this->viewName = $name;
+    }
+
     private function getContent($path, $params = [])
     {
         ob_start();

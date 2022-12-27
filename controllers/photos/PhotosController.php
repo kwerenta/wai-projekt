@@ -47,7 +47,7 @@ class PhotosController extends ApplicationController
 			$_SESSION["errors"][] = "Invalid File type.";
 		}
 
-		if (count($_SESSION["errors"]) > 0 || !$image) {
+		if (isset($_SESSION["errors"]) || !$image) {
 			header("Location: /");
 			return;
 		};

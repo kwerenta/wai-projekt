@@ -11,3 +11,17 @@ create_photo:
 show_photo:
   path: "/photos/{id}"
   controller: photos\PhotosController::show
+create_user:
+  path: "/signup"
+  method: "POST"
+  controller: "UsersController::create"
+new_user:
+  path: "/signup"
+  controller: "UsersController::new"
+create_user_session:
+  path: "/signin"
+  method: "POST"
+  controller: "UsersController::createSession"
+new_user_session:
+  path: "/signin"
+  controller: "UsersController::newSession"
