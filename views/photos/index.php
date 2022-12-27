@@ -7,6 +7,14 @@
 </div>
 <?php
 foreach ($photos as $photo) {
-  echo "<a href=\"/photos/{$photo->getId()}\"><img src=\"{$photo->getThumbnailPath()}\"/></a>";
+  echo <<<HTML
+<a href="/photos/{$photo->getId()}">
+  <div>
+    <p>Title: $photo->title</p>
+    <p>Author: $photo->author</p>
+    <img src="{$photo->getThumbnailPath()}"/>
+  </div>
+</a>
+HTML;
 }
 ?>
