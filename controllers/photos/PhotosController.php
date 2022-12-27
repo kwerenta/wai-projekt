@@ -18,7 +18,8 @@ class PhotosController extends ApplicationController
 
 	public function show()
 	{
-		$this->view->addData(["id" => $this->params["id"]]);
+		$photo = Photo::find($this->params["id"]);
+		$this->view->addData(["photo" => $photo]);
 	}
 
 	public function create()

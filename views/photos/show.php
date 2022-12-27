@@ -1,2 +1,3 @@
 <h1>views/photos/show.php</h1>
-<?= $id ?>
+<div>Title: <?= $photo->title ?></div>
+<img src="<?= $photo->getWatermarkPath() ?>" />

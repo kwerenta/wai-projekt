@@ -7,6 +7,6 @@
 </div>
 <?php
 foreach ($photos as $photo) {
-  echo "<img src='{$photo->getThumbnailPath()}' />";
+  echo "<a href=\"/photos/{$photo->getId()}\"><img src=\"{$photo->getThumbnailPath()}\"/></a>";
 }
 ?>
