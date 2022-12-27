@@ -9,8 +9,11 @@ class PhotosController extends ApplicationController
 {
 	public function index()
 	{
-		$photos = Photo::all();
-		$this->view->addData(["photos" => $photos]);
+		$page = intval($_GET["page"] ?? 1);
+		if ($page <= 0) $page = 1;
+
+		$photos = Photo::page($page);
+		$this->view->addData(["photos" => $photos, "page" => $page, "total" => Photo::count(), "pageSize" => Photo::$PAGE_SIZE]);
 	}
 
 	public function show()

@@ -6,7 +6,8 @@ use app\Database;
 
 class Photo
 {
-  private static $collection = "photos";
+  private static $COLLECTION = "photos";
+  public static $PAGE_SIZE = 10;
 
   public $title;
   public $name;
@@ -36,16 +37,16 @@ class Photo
 
   public function save()
   {
-    return Database::getCollection(static::$collection)->insertOne([
+    return Database::getCollection(static::$COLLECTION)->insertOne([
       "title" => $this->title,
       "name" => $this->name,
       "author" => $this->author
     ]);
   }
 
-  public static function all()
+  public static function page($page)
   {
-    $response = Database::getCollection(static::$collection)->find();
+    $response = Database::getCollection(static::$COLLECTION)->find([], ["limit" => static::$PAGE_SIZE, "skip" => static::$PAGE_SIZE * ($page - 1)]);
     $photos = [];
 
     foreach ($response as $photo) {
@@ -53,5 +54,10 @@ class Photo
     }
 
     return $photos;
+  }
+
+  public static function count()
+  {
+    return Database::getCollection(static::$COLLECTION)->count();
   }
 }
