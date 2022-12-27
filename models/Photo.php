@@ -19,6 +19,21 @@ class Photo
     $this->author = $author;
   }
 
+  public function getPath()
+  {
+    return "/images/" . basename($this->name);
+  }
+
+  public function getWatermarkPath()
+  {
+    return "/images/watermark_" . basename($this->name);
+  }
+
+  public function getThumbnailPath()
+  {
+    return "/images/thumbnail_" . basename($this->name);
+  }
+
   public function save()
   {
     return Database::getCollection(static::$collection)->insertOne([

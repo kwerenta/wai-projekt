@@ -7,6 +7,6 @@ use app\Application;
 <a href="<?= Application::$app->router->getPath('show_photo', ["id" => 5]) ?>">Photo 5</a>
 <?php
 foreach ($photos as $photo) {
-  echo "Title: " . $photo->title;
+  echo "<img src='{$photo->getThumbnailPath()}' />";
 }
 ?>
