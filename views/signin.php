@@ -1,10 +1,5 @@
 <?php
-if (isset($_SESSION['errors'])) {
-  foreach ($_SESSION["errors"] as $error) {
-    echo "<p>$error</p>";
-  }
-  unset($_SESSION['errors']);
-}
+app\Helper::showErrors();
 ?>
 <form action="/signin" method="POST">
   <div>

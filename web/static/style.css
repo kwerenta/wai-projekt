@@ -63,7 +63,11 @@ nav > div {
   height: 1.5rem;
 }
 
-.nav-user a {
+.logout {
+  color: red;
+}
+
+.signup {
   color: green;
 }
 

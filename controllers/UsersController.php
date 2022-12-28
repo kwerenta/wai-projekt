@@ -3,16 +3,21 @@
 namespace app\controllers;
 
 use app\models\User;
+use app\Helper;
 
 class UsersController extends ApplicationController
 {
   public function new()
   {
+    if (Helper::isLoggedIn())
+      return header("Location: /");
     $this->view->setName("signup");
   }
 
   public function newSession()
   {
+    if (Helper::isLoggedIn())
+      return header("Location: /");
     $this->view->setName("signin");
   }
 
@@ -54,5 +59,11 @@ class UsersController extends ApplicationController
 
     $_SESSION["user"] = $user->login;
     header("Location: /");
+  }
+
+  public function destroySession()
+  {
+    unset($_SESSION["user"]);
+    header("Location: /signin");
   }
 }

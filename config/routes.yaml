@@ -25,3 +25,6 @@ create_user_session:
 new_user_session:
   path: "/signin"
   controller: "UsersController::newSession"
+destroy_user_session:
+  path: "/logout"
+  controller: "UsersController::destroySession"
