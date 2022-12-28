@@ -5,16 +5,16 @@
   Page: <?= $page ?>
   <?php if ($page * $pageSize < $total) echo "<a href=\"/photos?page=" . ($page + 1) . "\">Next</a>" ?>
 </div>
-<?php
-foreach ($photos as $photo) {
-  echo <<<HTML
-<a href="/photos/{$photo->getId()}">
-  <div>
-    <p>Title: $photo->title</p>
-    <p>Author: $photo->author</p>
-    <img src="{$photo->getThumbnailPath()}"/>
-  </div>
-</a>
-HTML;
-}
-?>
+<form action="/favourites" method="POST">
+  <?php foreach ($photos as $photo) : ?>
+    <div>
+      <p>Title: <?= $photo->title ?></p>
+      <p>Author: <?= $photo->author ?></p>
+      <input type="checkbox" name="favourite[]" value="<?= $photo->getId() ?>" <?= $photo->isFavourite() ? "checked disabled" : "" ?>>
+      <a href="/photos/<?= $photo->getId() ?>">
+        <img src="<?= $photo->getThumbnailPath() ?>" />
+      </a>
+    </div>
+  <?php endforeach; ?>
+  <button>Remember selected</button>
+</form>

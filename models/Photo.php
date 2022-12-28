@@ -59,9 +59,34 @@ class Photo
     return new Photo($response["title"], $response["name"], $response["author"], $response["_id"]);
   }
 
+  public static function findMany($ids)
+  {
+    $idObjects = array_map(function ($id) {
+      return new MongoDB\BSON\ObjectId($id);
+    }, $ids);
+
+    $response = Database::getCollection(static::$COLLECTION)->find([
+      "_id" => ["\$in" => $idObjects]
+    ]);
+    return static::getArray($response);
+  }
+
   public static function page($page)
   {
-    $response = Database::getCollection(static::$COLLECTION)->find([], ["limit" => static::$PAGE_SIZE, "skip" => static::$PAGE_SIZE * ($page - 1)]);
+    $response = Database::getCollection(static::$COLLECTION)->find([], [
+      "limit" => static::$PAGE_SIZE,
+      "skip" => static::$PAGE_SIZE * ($page - 1)
+    ]);
+    return static::getArray($response);
+  }
+
+  public static function count()
+  {
+    return Database::getCollection(static::$COLLECTION)->count();
+  }
+
+  private static function getArray($response)
+  {
     $photos = [];
 
     foreach ($response as $photo) {
@@ -70,8 +95,8 @@ class Photo
     return $photos;
   }
 
-  public static function count()
+  public function isFavourite()
   {
-    return Database::getCollection(static::$COLLECTION)->count();
+    return in_array($this->_id, $_SESSION["favourite"] ?? []);
   }
 }

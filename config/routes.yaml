@@ -28,3 +28,14 @@ new_user_session:
 destroy_user_session:
   path: "/logout"
   controller: "UsersController::destroySession"
+index_bookmarks:
+  path: "/favourites"
+  controller: "FavouritesController::index"
+create_bookmarks:
+  path: "/favourites"
+  method: "POST"
+  controller: "FavouritesController::create"
+destroy_bookmarks:
+  path: "/favourites"
+  method: "DELETE"
+  controller: "FavouritesController::destroy"

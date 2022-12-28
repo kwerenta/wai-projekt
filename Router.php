@@ -63,7 +63,13 @@ class Router
 
     private function comparePaths($sourcePath, $targetPath, $method): bool
     {
-        if (strcasecmp($_SERVER["REQUEST_METHOD"], $method) != 0) return false;
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            if (strtoupper($method) !== "GET") return false;
+        } else {
+            if (isset($_POST["_method"])) {
+                if (strcasecmp($_POST["_method"], $method) != 0) return false;
+            } else if (strtoupper($method) !== "POST") return false;
+        };
         if ($sourcePath == $targetPath) return true;
 
         $explodedSourcePath = explode("/", $sourcePath);
