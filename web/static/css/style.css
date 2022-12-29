@@ -86,6 +86,7 @@ nav > div {
 main {
   flex: 1;
   padding-top: 0.5rem;
+  margin-right: 2rem;
 }
 
 .search-bar {
@@ -100,7 +101,7 @@ main {
 }
 
 .search-bar > input {
-  margin-inline: 1rem 3rem;
+  margin-inline: 1rem;
   background-color: #10141f;
   border: none;
   font-size: 1rem;
@@ -111,4 +112,130 @@ main {
 .search-bar > input::placeholder {
   color: #aaa;
   font-family: "Verdana", sans-serif;
+}
+
+#photosForm {
+  display: contents;
+}
+
+#photosForm > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0.5rem;
+  background-color: #10141f;
+}
+
+#photosForm > header > button {
+  appearance: none;
+  cursor: pointer;
+  background-color: hsl(0, 99%, 64%);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+.no-results {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.photosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.photo {
+  width: 200px;
+  height: 125px;
+  position: relative;
+}
+
+.photo::before {
+  content: "";
+  position: absolute;
+  background-color: black;
+  opacity: 0.5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.photo input[type="checkbox"] {
+  display: none;
+}
+
+.photo img {
+  border-radius: 0.5rem;
+}
+
+.description,
+.favourite,
+.privateIcon,
+.favouriteLabel {
+  position: absolute;
+}
+
+.description {
+  bottom: 0.5rem;
+  left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.privateIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.favouriteLabel {
+  width: 1.25rem;
+  height: 1.25rem;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: white;
+}
+
+.solid-star {
+  display: none;
+}
+
+input[type="checkbox"]:checked + .favouriteLabel > .solid-star {
+  display: block;
+}
+input[type="checkbox"]:checked:disabled + .favouriteLabel > .solid-star {
+  display: block;
+  color: hsl(0, 99%, 64%);
+}
+
+input[type="checkbox"]:checked + .favouriteLabel > .outline-star {
+  display: none;
+}
+
+footer {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+footer span {
+  color: #777;
+  cursor: default;
+}
+
+footer a {
+  color: white;
+}
+
+.page {
+  color: #fff;
+  font-weight: bold;
+  padding-inline: 0.5rem;
 }
