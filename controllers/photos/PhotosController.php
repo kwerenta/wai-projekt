@@ -75,7 +75,7 @@ class PhotosController extends ApplicationController
 
 	private function createWatermark($image, $name)
 	{
-		$font = ROOT_PATH . "/static/Poppins-Regular.ttf";
+		$font = ROOT_PATH . "/static/fonts/Poppins-Regular.ttf";
 
 		$watermarkBox = imagettfbbox(16, 0, $font, $_POST["watermark"]);
 		$watermarkX = $watermarkBox[2] - $watermarkBox[0];

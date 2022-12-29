@@ -39,3 +39,6 @@ destroy_bookmarks:
   path: "/favourites"
   method: "DELETE"
   controller: "FavouritesController::destroy"
+index_search:
+  path: "/search"
+  controller: "SearchController::index"

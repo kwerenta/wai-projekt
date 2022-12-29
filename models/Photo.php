@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use MongoDB\BSON;
+use MongoDB\BSON\ObjectId;
 use app\Database;
 use app\Helper;
 
@@ -63,7 +63,9 @@ class Photo
 
   public static function find($id)
   {
-    $response = Database::getCollection(static::$COLLECTION)->findOne(["_id" => new BSON\ObjectId($id)]);
+    $response = Database::getCollection(static::$COLLECTION)->findOne([
+      "_id" => new ObjectId($id)
+    ]);
     if ($response == NULL) return NULL;
     return new Photo($response["title"], $response["name"], $response["author"], $response["privateOwner"] ?? NULL, $response["_id"]);
   }
@@ -71,7 +73,7 @@ class Photo
   public static function findMany($ids)
   {
     $idObjects = array_map(function ($id) {
-      return new BSON\ObjectId($id);
+      return new ObjectId($id);
     }, $ids);
 
     $response = Database::getCollection(static::$COLLECTION)->find([
@@ -83,9 +85,7 @@ class Photo
   public static function page($page)
   {
     $response = Database::getCollection(static::$COLLECTION)->find([
-      "privateOwner" => [
-        "\$in" => [null, static::getUserId()]
-      ]
+      "privateOwner" => static::privateFilter()
     ], [
       "limit" => static::$PAGE_SIZE,
       "skip" => static::$PAGE_SIZE * ($page - 1)
@@ -93,12 +93,19 @@ class Photo
     return static::getArray($response);
   }
 
+  public static function search($query)
+  {
+    $response = Database::getCollection(static::$COLLECTION)->find([
+      "title" => ["\$regex" => $query, "\$options" => "i"],
+      "privateOwner" => static::privateFilter()
+    ]);
+    return static::getArray($response);
+  }
+
   public static function count()
   {
     return Database::getCollection(static::$COLLECTION)->count([
-      "privateOwner" => [
-        "\$in" => [null, static::getUserId()]
-      ]
+      "privateOwner" => static::privateFilter()
     ]);
   }
 
@@ -115,5 +122,10 @@ class Photo
   private static function getUserId()
   {
     return Helper::isLoggedIn() ? $_SESSION["user"]->getId() : null;
+  }
+
+  private static function privateFilter()
+  {
+    return ["\$in" => [null, static::getUserId()]];
   }
 }
