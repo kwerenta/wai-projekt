@@ -14,7 +14,7 @@ class PhotosController extends ApplicationController
 		if ($page <= 0) $page = 1;
 
 		$photos = Photo::page($page);
-		$this->view->addData(["photos" => $photos, "page" => $page, "total" => Photo::count(), "pageSize" => Photo::$PAGE_SIZE]);
+		$this->view->addData(["photos" => $photos, "page" => $page, "total" => Photo::count(), "pageSize" => Photo::PAGE_SIZE]);
 	}
 
 	public function show()

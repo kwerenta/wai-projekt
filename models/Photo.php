@@ -8,8 +8,8 @@ use app\Helper;
 
 class Photo
 {
-  private static $COLLECTION = "photos";
-  public static $PAGE_SIZE = 10;
+  const COLLECTION = "photos";
+  const PAGE_SIZE = 10;
 
   private $_id;
   public $title;
@@ -53,7 +53,7 @@ class Photo
 
   public function save()
   {
-    return Database::getCollection(static::$COLLECTION)->insertOne([
+    return Database::getCollection(self::COLLECTION)->insertOne([
       "title" => $this->title,
       "name" => $this->name,
       "author" => $this->author,
@@ -63,7 +63,7 @@ class Photo
 
   public static function find($id)
   {
-    $response = Database::getCollection(static::$COLLECTION)->findOne([
+    $response = Database::getCollection(self::COLLECTION)->findOne([
       "_id" => new ObjectId($id)
     ]);
     if ($response == NULL) return NULL;
@@ -76,7 +76,7 @@ class Photo
       return new ObjectId($id);
     }, $ids);
 
-    $response = Database::getCollection(static::$COLLECTION)->find([
+    $response = Database::getCollection(self::COLLECTION)->find([
       "_id" => ["\$in" => $idObjects]
     ]);
     return static::getArray($response);
@@ -84,18 +84,18 @@ class Photo
 
   public static function page($page)
   {
-    $response = Database::getCollection(static::$COLLECTION)->find([
+    $response = Database::getCollection(self::COLLECTION)->find([
       "privateOwner" => static::privateFilter()
     ], [
-      "limit" => static::$PAGE_SIZE,
-      "skip" => static::$PAGE_SIZE * ($page - 1)
+      "limit" => self::PAGE_SIZE,
+      "skip" => self::PAGE_SIZE * ($page - 1)
     ]);
     return static::getArray($response);
   }
 
   public static function search($query)
   {
-    $response = Database::getCollection(static::$COLLECTION)->find([
+    $response = Database::getCollection(self::COLLECTION)->find([
       "title" => ["\$regex" => $query, "\$options" => "i"],
       "privateOwner" => static::privateFilter()
     ]);
@@ -104,7 +104,7 @@ class Photo
 
   public static function count()
   {
-    return Database::getCollection(static::$COLLECTION)->count([
+    return Database::getCollection(self::COLLECTION)->count([
       "privateOwner" => static::privateFilter()
     ]);
   }

@@ -51,7 +51,7 @@ class UsersController extends ApplicationController
       return;
     }
 
-    if (!password_verify($_POST["password"], $user->getPassword())) {
+    if (!$user->verifyPassword($_POST["password"])) {
       $_SESSION["errors"][] = "Invalid password.";
       header("Location: /signin");
       return;

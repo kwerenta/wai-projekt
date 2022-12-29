@@ -6,7 +6,7 @@ use app\Database;
 
 class User
 {
-  private static $COLLECTION = "users";
+  const COLLECTION = "users";
 
   private $_id;
   public $email;
@@ -23,7 +23,7 @@ class User
 
   public function save()
   {
-    return Database::getCollection(static::$COLLECTION)->insertOne([
+    return Database::getCollection(self::COLLECTION)->insertOne([
       "email" => $this->email,
       "login" => $this->login,
       "password" => $this->passwordHash
@@ -35,14 +35,14 @@ class User
     return $this->_id;
   }
 
-  public function getPassword()
+  public function verifyPassword($password)
   {
-    return $this->passwordHash;
+    return password_verify($password, $this->passwordHash);
   }
 
   public static function isUnique($email, $login)
   {
-    return !!Database::getCollection(static::$COLLECTION)->findOne([
+    return !!Database::getCollection(self::COLLECTION)->findOne([
       "\$or" => [
         ["email" => $email],
         ["login" => $login]
@@ -52,7 +52,7 @@ class User
 
   public static function find($login)
   {
-    $response = Database::getCollection(static::$COLLECTION)->findOne([
+    $response = Database::getCollection(self::COLLECTION)->findOne([
       "login" => $login
     ]);
     if (!$response) return null;
