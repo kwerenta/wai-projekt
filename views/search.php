@@ -4,6 +4,6 @@
   </svg>
   <input type="text" name="query" placeholder="Search for photos">
 </div>
-<div id="output"></div>
+<div id="output" class="photosContainer"></div>
 
 <script src="/static/js/search.js" type="module"></script>
