@@ -26,6 +26,8 @@ nav {
   margin: 2rem;
   padding: 1.5rem;
   border-radius: 0.75rem;
+  position: sticky;
+  top: 2rem;
 }
 
 nav > div {
@@ -37,9 +39,14 @@ nav > div {
 }
 
 .nav-logo a {
-  color: #fe4646;
+  color: hsl(0, 99%, 64%);
+  font-weight: bold;
   text-decoration: none;
   font-size: 1.5rem;
+}
+
+.nav-logo a:hover {
+  color: hsl(0, 99%, 58%);
 }
 
 .nav-items {
@@ -79,4 +86,29 @@ nav > div {
 main {
   flex: 1;
   padding-top: 0.5rem;
+}
+
+.search-bar {
+  margin-block: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar > svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.search-bar > input {
+  margin-inline: 1rem 3rem;
+  background-color: #10141f;
+  border: none;
+  font-size: 1rem;
+  padding: 0.25rem;
+  color: white;
+  flex: 1;
+}
+.search-bar > input::placeholder {
+  color: #aaa;
+  font-family: "Verdana", sans-serif;
 }
