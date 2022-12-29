@@ -4,20 +4,19 @@ namespace app\controllers;
 
 use app\models\User;
 use app\Helper;
+use app\Router;
 
 class UsersController extends ApplicationController
 {
   public function new()
   {
-    if (Helper::isLoggedIn())
-      return header("Location: /");
+    $this->authenticateUser();
     $this->view->setName("signup");
   }
 
   public function newSession()
   {
-    if (Helper::isLoggedIn())
-      return header("Location: /");
+    $this->authenticateUser();
     $this->view->setName("signin");
   }
 
@@ -29,16 +28,14 @@ class UsersController extends ApplicationController
     if ($_POST["password"] != $_POST["passwordConfirmation"])
       $_SESSION["errors"][] = "Passwords don't match.";
 
-    if (isset($_SESSION["errors"])) {
-      header("Location: /signup");
-      return;
-    }
+    if (isset($_SESSION["errors"]))
+      Router::redirect("/signup");
 
     $passwordHash = password_hash($_POST["password"], PASSWORD_BCRYPT);
     $user = new User($_POST["email"], $_POST["login"], $passwordHash);
     $user->save();
 
-    header("Location: /signin");
+    Router::redirect("/signin");
   }
 
   public function createSession()
@@ -47,25 +44,29 @@ class UsersController extends ApplicationController
 
     if (!$user) {
       $_SESSION["errors"][] = "User with that login doesn't exist.";
-      header("Location: /signin");
-      return;
+      Router::redirect("/signin");
     }
 
     if (!$user->verifyPassword($_POST["password"])) {
       $_SESSION["errors"][] = "Invalid password.";
-      header("Location: /signin");
-      return;
+      Router::redirect("/signin");
     }
 
     session_regenerate_id();
     $_SESSION["user"] = $user;
-    header("Location: /");
+    Router::redirect("/");
   }
 
   public function destroySession()
   {
     session_unset();
     session_destroy();
-    header("Location: /signin");
+    Router::redirect("/signin");
+  }
+
+  private function authenticateUser()
+  {
+    if (Helper::isLoggedIn())
+      Router::redirect("/");
   }
 }

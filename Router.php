@@ -19,21 +19,6 @@ class Router
         return $this->currentRoute;
     }
 
-    public function getPath($routeName, $params = []): string
-    {
-        foreach ($this->routes as $name => $route) {
-            if ($routeName == $name) {
-                $url = $route["path"];
-
-                foreach ($params as $key => $value) {
-                    $url = str_replace(sprintf("{%s}", $key), $value, $url);
-                }
-                return $url;
-            }
-        }
-        return "#";
-    }
-
     public function getParams(): array
     {
         return $this->params;
@@ -59,6 +44,12 @@ class Router
             }
         }
         return false;
+    }
+
+    public static function redirect($path)
+    {
+        header("Location: " . $path);
+        exit;
     }
 
     private function comparePaths($sourcePath, $targetPath, $method): bool

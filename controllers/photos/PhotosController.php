@@ -5,6 +5,7 @@ namespace app\controllers\photos;
 use app\controllers\ApplicationController;
 use app\models\Photo;
 use app\Helper;
+use app\Router;
 
 class PhotosController extends ApplicationController
 {
@@ -29,8 +30,7 @@ class PhotosController extends ApplicationController
 
 		if ($file["error"] !== 0) {
 			$_SESSION["errors"][] = "File wasn't uploaded correctly.";
-			header("Location: /");
-			return;
+			Router::redirect("/");
 		}
 
 		if (filesize($file["tmp_name"]) > 1000000) {
@@ -50,10 +50,8 @@ class PhotosController extends ApplicationController
 			$_SESSION["errors"][] = "Invalid File type.";
 		}
 
-		if (isset($_SESSION["errors"]) || !$image) {
-			header("Location: /");
-			return;
-		};
+		if (isset($_SESSION["errors"]) || !$image)
+			Router::redirect("/");
 
 		$fileName =  uniqid() . time() . $extension;
 		$targetPath = IMAGES_PATH . $fileName;
@@ -70,7 +68,7 @@ class PhotosController extends ApplicationController
 		$photo->save();
 
 		move_uploaded_file($file["tmp_name"], $targetPath);
-		header("Location: /photos");
+		Router::redirect("/photos");
 	}
 
 	private function createWatermark($image, $name)

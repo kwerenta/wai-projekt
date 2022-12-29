@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Photo;
+use app\Router;
 
 class FavouritesController extends ApplicationController
 {
@@ -16,12 +17,12 @@ class FavouritesController extends ApplicationController
   public function create()
   {
     $_SESSION["favourite"] = array_unique(array_merge($_SESSION["favourite"] ?? [], $_POST["favourite"] ?? []), SORT_REGULAR);
-    header("Location: /photos");
+    Router::redirect("/photos");
   }
 
   public function destroy()
   {
     $_SESSION["favourite"] = array_diff($_SESSION["favourite"] ?? [], $_POST["unfavourite"] ?? []);
-    header("Location: /favourites");
+    Router::redirect("/favourites");
   }
 }
