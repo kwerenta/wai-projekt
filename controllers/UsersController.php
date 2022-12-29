@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\User;
 use app\Helper;
 use app\Router;
+use app\Session;
 
 class UsersController extends ApplicationController
 {
@@ -22,13 +23,15 @@ class UsersController extends ApplicationController
 
   public function create()
   {
+    $errors = &Session::errors();
+
     if (User::isUnique($_POST["email"], $_POST["login"]))
-      $_SESSION["errors"][] = "User with that email or login already exists.";
+      $errors[] = "User with that email or login already exists.";
 
     if ($_POST["password"] != $_POST["passwordConfirmation"])
-      $_SESSION["errors"][] = "Passwords don't match.";
+      $errors[] = "Passwords don't match.";
 
-    if (isset($_SESSION["errors"]))
+    if (count($errors) !== 0)
       Router::redirect("/signup");
 
     $passwordHash = password_hash($_POST["password"], PASSWORD_BCRYPT);
@@ -41,19 +44,21 @@ class UsersController extends ApplicationController
   public function createSession()
   {
     $user = User::find($_POST["login"]);
+    $errors = &Session::errors();
 
     if (!$user) {
-      $_SESSION["errors"][] = "User with that login doesn't exist.";
+      $errors[] = "User with that login doesn't exist.";
       Router::redirect("/signin");
     }
 
     if (!$user->verifyPassword($_POST["password"])) {
-      $_SESSION["errors"][] = "Invalid password.";
+      $errors[] = "Invalid password.";
       Router::redirect("/signin");
     }
 
     session_regenerate_id();
-    $_SESSION["user"] = $user;
+    $sessionUser = &Session::user();
+    $sessionUser = $user;
     Router::redirect("/");
   }
 

@@ -5,6 +5,7 @@ namespace app\models;
 use MongoDB\BSON\ObjectId;
 use app\Database;
 use app\Helper;
+use app\Session;
 
 class Photo
 {
@@ -48,7 +49,7 @@ class Photo
 
   public function isFavourite()
   {
-    return in_array($this->_id, $_SESSION["favourite"] ?? []);
+    return in_array($this->_id, Session::favourites());
   }
 
   public function save()
@@ -121,7 +122,7 @@ class Photo
 
   private static function getUserId()
   {
-    return Helper::isLoggedIn() ? $_SESSION["user"]->getId() : null;
+    return Helper::isLoggedIn() ? Session::user()->getId() : null;
   }
 
   private static function privateFilter()

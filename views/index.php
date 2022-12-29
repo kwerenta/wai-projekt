@@ -11,7 +11,7 @@
   </div>
   <div>
     <label for="author">Author</label>
-    <input type="text" name="author" <?= (app\Helper::isLoggedIn() ? "value=\"{$_SESSION["user"]->login}\" disabled" : "") ?>>
+    <input type="text" name="author" <?= (app\Helper::isLoggedIn() ? "value=\"" . app\Session::user()->login . "\" disabled" : "") ?>>
   </div>
   <div>
     <label for="watermark">Watermark</label>

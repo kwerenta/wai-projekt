@@ -6,6 +6,7 @@ use app\controllers\ApplicationController;
 use app\models\Photo;
 use app\Helper;
 use app\Router;
+use app\Session;
 
 class PhotosController extends ApplicationController
 {
@@ -27,14 +28,15 @@ class PhotosController extends ApplicationController
 	public function create()
 	{
 		$file = $_FILES["photo"];
+		$errors = &Session::errors();
 
 		if ($file["error"] !== 0) {
-			$_SESSION["errors"][] = "File wasn't uploaded correctly.";
+			$errors[] = "File wasn't uploaded correctly.";
 			Router::redirect("/");
 		}
 
 		if (filesize($file["tmp_name"]) > 1000000) {
-			$_SESSION["errors"][] = "Max file size is 1MB.";
+			$errors[] = "Max file size is 1MB.";
 		}
 
 		$mimeType = mime_content_type($file["tmp_name"]);
@@ -47,10 +49,10 @@ class PhotosController extends ApplicationController
 			$image = imagecreatefrompng($file["tmp_name"]);
 			$extension .= "png";
 		} else {
-			$_SESSION["errors"][] = "Invalid File type.";
+			$errors[] = "Invalid File type.";
 		}
 
-		if (isset($_SESSION["errors"]) || !$image)
+		if (count($errors) !== 0 || !$image)
 			Router::redirect("/");
 
 		$fileName =  uniqid() . time() . $extension;
@@ -62,8 +64,9 @@ class PhotosController extends ApplicationController
 
 		$this->createWatermark($image, $fileName);
 
-		$author = Helper::isLoggedIn() ? $_SESSION["user"]->login : $_POST["author"];
-		$privateOwner = Helper::isLoggedIn() && isset($_POST["isPrivate"]) && $_POST["isPrivate"] === "true" ? $_SESSION["user"]->getId() : null;
+		$currentUser = Session::user();
+		$author = Helper::isLoggedIn() ? $currentUser->login : $_POST["author"];
+		$privateOwner = Helper::isLoggedIn() && isset($_POST["isPrivate"]) && $_POST["isPrivate"] === "true" ? $currentUser->getId() : null;
 		$photo = new Photo($_POST["title"], $fileName, $author, $privateOwner);
 		$photo->save();
 

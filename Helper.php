@@ -2,20 +2,23 @@
 
 namespace app;
 
+use app\Session;
+
 class Helper
 {
   public static function isLoggedIn()
   {
-    return isset($_SESSION["user"]);
+    return Session::user() !== null;
   }
 
   public static function showErrors()
   {
-    if (isset($_SESSION['errors'])) {
-      foreach ($_SESSION["errors"] as $error) {
+    $errors = &Session::errors();
+    if (count($errors) !== 0) {
+      foreach ($errors as $error) {
         echo "<p>$error</p>";
       }
-      unset($_SESSION['errors']);
+      unset($errors);
     }
   }
 }
