@@ -8,7 +8,7 @@
 <form action="/favourites" method="POST">
   <?php foreach ($photos as $photo) : ?>
     <div>
-      <p>Title: <?= $photo->title ?></p>
+      <p>Title: <?= $photo->title ?> <?php if ($photo->privateOwner !== null) echo "(private)" ?></p>
       <p>Author: <?= $photo->author ?></p>
       <input type="checkbox" name="favourite[]" value="<?= $photo->getId() ?>" <?= $photo->isFavourite() ? "checked disabled" : "" ?>>
       <a href="/photos/<?= $photo->getId() ?>">

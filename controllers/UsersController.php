@@ -57,13 +57,15 @@ class UsersController extends ApplicationController
       return;
     }
 
-    $_SESSION["user"] = $user->login;
+    session_regenerate_id();
+    $_SESSION["user"] = $user;
     header("Location: /");
   }
 
   public function destroySession()
   {
-    unset($_SESSION["user"]);
+    session_unset();
+    session_destroy();
     header("Location: /signin");
   }
 }

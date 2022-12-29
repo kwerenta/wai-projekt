@@ -4,6 +4,7 @@ namespace app\controllers\photos;
 
 use app\controllers\ApplicationController;
 use app\models\Photo;
+use app\Helper;
 
 class PhotosController extends ApplicationController
 {
@@ -25,7 +26,6 @@ class PhotosController extends ApplicationController
 	public function create()
 	{
 		$file = $_FILES["photo"];
-		$targetPath = IMAGES_PATH . basename($file["name"]);;
 
 		if ($file["error"] !== 0) {
 			$_SESSION["errors"][] = "File wasn't uploaded correctly.";
@@ -39,10 +39,13 @@ class PhotosController extends ApplicationController
 
 		$mimeType = mime_content_type($file["tmp_name"]);
 		$image = NULL;
+		$extension = ".";
 		if ($mimeType === "image/jpeg") {
 			$image = imagecreatefromjpeg($file["tmp_name"]);
+			$extension .= "jpg";
 		} else if ($mimeType === "image/png") {
 			$image = imagecreatefrompng($file["tmp_name"]);
+			$extension .= "png";
 		} else {
 			$_SESSION["errors"][] = "Invalid File type.";
 		}
@@ -52,13 +55,18 @@ class PhotosController extends ApplicationController
 			return;
 		};
 
+		$fileName =  uniqid() . time() . $extension;
+		$targetPath = IMAGES_PATH . $fileName;
+
 		$thumbnail = imagescale($image, 200, 125);
-		imagepng($thumbnail, IMAGES_PATH . "thumbnail_" . basename($file["name"]));
+		imagepng($thumbnail, IMAGES_PATH . "thumbnail_" . $fileName);
 		imagedestroy($thumbnail);
 
-		$this->createWatermark($image, $file["name"]);
+		$this->createWatermark($image, $fileName);
 
-		$photo = new Photo($_POST["title"], basename($file["name"]), $_POST["author"]);
+		$author = Helper::isLoggedIn() ? $_SESSION["user"]->login : $_POST["author"];
+		$privateOwner = Helper::isLoggedIn() && isset($_POST["isPrivate"]) && $_POST["isPrivate"] === "true" ? $_SESSION["user"]->getId() : null;
+		$photo = new Photo($_POST["title"], $fileName, $author, $privateOwner);
 		$photo->save();
 
 		move_uploaded_file($file["tmp_name"], $targetPath);

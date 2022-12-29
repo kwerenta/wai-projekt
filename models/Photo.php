@@ -2,8 +2,9 @@
 
 namespace app\models;
 
-use MongoDB;
+use MongoDB\BSON;
 use app\Database;
+use app\Helper;
 
 class Photo
 {
@@ -14,13 +15,15 @@ class Photo
   public $title;
   public $name;
   public $author;
+  public $privateOwner;
 
-  public function __construct($title, $name, $author, $id = NULL)
+  public function __construct($title, $name, $author, $owner = NULL, $id = NULL)
   {
     $this->_id = $id;
     $this->title = $title;
     $this->name = $name;
     $this->author = $author;
+    $this->privateOwner = $owner;
   }
 
   public function getPath()
@@ -43,26 +46,32 @@ class Photo
     return $this->_id;
   }
 
+  public function isFavourite()
+  {
+    return in_array($this->_id, $_SESSION["favourite"] ?? []);
+  }
+
   public function save()
   {
     return Database::getCollection(static::$COLLECTION)->insertOne([
       "title" => $this->title,
       "name" => $this->name,
-      "author" => $this->author
+      "author" => $this->author,
+      "privateOwner" => $this->privateOwner
     ]);
   }
 
   public static function find($id)
   {
-    $response = Database::getCollection(static::$COLLECTION)->findOne(["_id" => new MongoDB\BSON\ObjectId($id)]);
+    $response = Database::getCollection(static::$COLLECTION)->findOne(["_id" => new BSON\ObjectId($id)]);
     if ($response == NULL) return NULL;
-    return new Photo($response["title"], $response["name"], $response["author"], $response["_id"]);
+    return new Photo($response["title"], $response["name"], $response["author"], $response["privateOwner"] ?? NULL, $response["_id"]);
   }
 
   public static function findMany($ids)
   {
     $idObjects = array_map(function ($id) {
-      return new MongoDB\BSON\ObjectId($id);
+      return new BSON\ObjectId($id);
     }, $ids);
 
     $response = Database::getCollection(static::$COLLECTION)->find([
@@ -73,7 +82,11 @@ class Photo
 
   public static function page($page)
   {
-    $response = Database::getCollection(static::$COLLECTION)->find([], [
+    $response = Database::getCollection(static::$COLLECTION)->find([
+      "privateOwner" => [
+        "\$in" => [null, static::getUserId()]
+      ]
+    ], [
       "limit" => static::$PAGE_SIZE,
       "skip" => static::$PAGE_SIZE * ($page - 1)
     ]);
@@ -82,7 +95,11 @@ class Photo
 
   public static function count()
   {
-    return Database::getCollection(static::$COLLECTION)->count();
+    return Database::getCollection(static::$COLLECTION)->count([
+      "privateOwner" => [
+        "\$in" => [null, static::getUserId()]
+      ]
+    ]);
   }
 
   private static function getArray($response)
@@ -90,13 +107,13 @@ class Photo
     $photos = [];
 
     foreach ($response as $photo) {
-      $photos[] = new Photo($photo["title"], $photo["name"], $photo["author"], strval($photo["_id"]));
+      $photos[] = new Photo($photo["title"], $photo["name"], $photo["author"], $photo["privateOwner"] ?? NULL, strval($photo["_id"]));
     }
     return $photos;
   }
 
-  public function isFavourite()
+  private static function getUserId()
   {
-    return in_array($this->_id, $_SESSION["favourite"] ?? []);
+    return Helper::isLoggedIn() ? $_SESSION["user"]->getId() : null;
   }
 }
