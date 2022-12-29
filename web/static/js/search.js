@@ -1,4 +1,4 @@
-const URL = "http://192.168.56.10:8080/search?";
+const URL = `${window.location.origin}/search?`;
 
 const output = document.querySelector("#output");
 
@@ -9,10 +9,24 @@ const fetchPhotos = async e => {
     return;
   }
 
-  const res = await fetch(URL + new URLSearchParams({ query }));
-  output.innerHTML = await res.text();
+  try {
+    const res = await fetch(URL + new URLSearchParams({ query }));
+    output.innerHTML = await res.text();
+  } catch (err) {
+    output.innerHTML = "Error occured.";
+  }
+
+  if (output.innerHTML === "") output.innerHTML = "There are no results.";
+};
+
+const debouncedFetch = timeout => {
+  let timer;
+  return e => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fetchPhotos(e), timeout);
+  };
 };
 
 document
   .querySelector("input[name=query]")
-  .addEventListener("keyup", fetchPhotos);
+  .addEventListener("keyup", debouncedFetch(300));
