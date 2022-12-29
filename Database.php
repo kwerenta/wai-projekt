@@ -12,10 +12,10 @@ class Database
 	{
 		if (!isset(static::$client))
 			static::$client = new MongoDB\Client(
-				"mongodb://localhost:27017/wai",
+				DB_CONNECTION_STRING,
 				[
-					"username" => "wai_web",
-					"password" => "w@i_w3b"
+					"username" => DB_USERNAME,
+					"password" => DB_PASSWORD
 				]
 			);
 

@@ -1,8 +1,8 @@
 <?php
 require_once "../vendor/autoload.php";
 
-define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT']);
-define("IMAGES_PATH", ROOT_PATH . "/images/");
+require_once "../config/paths.php";
+require_once "../config/db.php";
 
 use app\Application;
 
