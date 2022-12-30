@@ -51,7 +51,14 @@ class PhotosController extends ApplicationController
 			$image = imagecreatefrompng($file["tmp_name"]);
 			$extension .= "png";
 		} else {
-			$errors[] = "Invalid File type.";
+			$errors[] = "Invalid file type.";
+		}
+
+		$currentUser = Session::user();
+		$author = Helper::isLoggedIn() ? $currentUser->login : (empty($_POST["author"]) ? null : $_POST["author"]);
+
+		if (!$this->validateRequiredFields(["title", "watermark"]) || $author === null) {
+			$errors[] = "Some required fields are empty.";
 		}
 
 		if (count($errors) !== 0 || !$image)
@@ -66,8 +73,6 @@ class PhotosController extends ApplicationController
 
 		$this->createWatermark($image, $fileName);
 
-		$currentUser = Session::user();
-		$author = Helper::isLoggedIn() ? $currentUser->login : $_POST["author"];
 		$privateOwner = Helper::isLoggedIn() && isset($_POST["isPrivate"]) && $_POST["isPrivate"] === "true" ? $currentUser->getId() : null;
 		$photo = new Photo($_POST["title"], $fileName, $author, $privateOwner);
 		$photo->save();

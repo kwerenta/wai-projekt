@@ -15,4 +15,13 @@ class ApplicationController
         $this->view = new View($namespace . "/" . $action, $this->layout);
         $this->params = $params;
     }
+
+    protected function validateRequiredFields($fields)
+    {
+        foreach ($fields as $field) {
+            if (empty($_POST[$field]))
+                return false;
+        }
+        return true;
+    }
 }

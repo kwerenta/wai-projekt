@@ -25,6 +25,11 @@ class UsersController extends ApplicationController
   {
     $errors = &Session::errors();
 
+    if (!$this->validateRequiredFields(["email", "login", "password", "passwordConfirmation"])) {
+      $errors[] = "Some required fields are empty.";
+      Router::redirect("/signup");
+    }
+
     if (User::isUnique($_POST["email"], $_POST["login"]))
       $errors[] = "User with that email or login already exists.";
 
@@ -43,8 +48,14 @@ class UsersController extends ApplicationController
 
   public function createSession()
   {
-    $user = User::find($_POST["login"]);
     $errors = &Session::errors();
+
+    if (!$this->validateRequiredFields(["login", "password"])) {
+      $errors[] = "Some required fields are empty.";
+      Router::redirect("/signin");
+    }
+
+    $user = User::find($_POST["login"]);
 
     if (!$user) {
       $errors[] = "User with that login doesn't exist.";
