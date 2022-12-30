@@ -46,7 +46,7 @@
     <span>Previous</span>
   <?php endif; ?>
   <span class="page"><?= $page ?></span>
-  <?php if ($page * $pageSize < $total) : ?>
+  <?php if (app\models\Photo::isNextPage($page)) : ?>
     <a href="/photos?page=<?= $page + 1 ?>">Next</a>
   <?php else : ?>
     <span>Next</span>

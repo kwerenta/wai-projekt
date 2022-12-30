@@ -10,7 +10,7 @@ use app\Session;
 class Photo
 {
   const COLLECTION = "photos";
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
 
   private $_id;
   public $title;
@@ -112,6 +112,11 @@ class Photo
     return Database::getCollection(self::COLLECTION)->count([
       "privateOwner" => static::privateFilter()
     ]);
+  }
+
+  public static function isNextPage($page)
+  {
+    return $page * self::PAGE_SIZE < static::count();
   }
 
   private static function getArray($response)

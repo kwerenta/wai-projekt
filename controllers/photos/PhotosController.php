@@ -13,10 +13,12 @@ class PhotosController extends ApplicationController
 	public function index()
 	{
 		$page = intval($_GET["page"] ?? 1);
-		if ($page <= 0) $page = 1;
+		if ($page <= 0) Router::redirect("/photos");
 
 		$photos = Photo::page($page);
-		$this->view->addData(["photos" => $photos, "page" => $page, "total" => Photo::count(), "pageSize" => Photo::PAGE_SIZE]);
+		if (empty($photos) && $page !== 1) Router::pageNotFound();
+
+		$this->view->addData(["photos" => $photos, "page" => $page, "total" => Photo::count()]);
 	}
 
 	public function show()
