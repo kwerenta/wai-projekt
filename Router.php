@@ -52,6 +52,13 @@ class Router
         exit;
     }
 
+    public static function pageNotFound()
+    {
+        $notFoundView = new View("404", "404");
+        echo $notFoundView->render();
+        exit;
+    }
+
     private function comparePaths($sourcePath, $targetPath, $method): bool
     {
         if ($_SERVER["REQUEST_METHOD"] === "GET") {

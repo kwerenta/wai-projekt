@@ -27,8 +27,7 @@ class Application
 
             echo $this->controller->view->render();
         } else {
-            $notFoundView = new View("404", "404");
-            echo $notFoundView->render();
+            Router::pageNotFound();
         }
     }
 }

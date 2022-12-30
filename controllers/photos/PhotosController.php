@@ -22,6 +22,8 @@ class PhotosController extends ApplicationController
 	public function show()
 	{
 		$photo = Photo::find($this->params["id"]);
+		if ($photo === null) Router::pageNotFound();
+
 		$this->view->addData(["photo" => $photo]);
 	}
 

@@ -64,11 +64,15 @@ class Photo
 
   public static function find($id)
   {
-    $response = Database::getCollection(self::COLLECTION)->findOne([
-      "_id" => new ObjectId($id)
-    ]);
-    if ($response == NULL) return NULL;
-    return new Photo($response["title"], $response["name"], $response["author"], $response["privateOwner"] ?? NULL, $response["_id"]);
+    try {
+      $response = Database::getCollection(self::COLLECTION)->findOne([
+        "_id" => new ObjectId($id)
+      ]);
+      if ($response == null) return null;
+      return new Photo($response["title"], $response["name"], $response["author"], $response["privateOwner"] ?? NULL, $response["_id"]);
+    } catch (\Exception $e) {
+      return null;
+    }
   }
 
   public static function findMany($ids)
