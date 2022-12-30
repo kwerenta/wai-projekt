@@ -9,6 +9,11 @@ class Session
     return static::array("errors");
   }
 
+  public static function clearErrors()
+  {
+    static::unset("errors");
+  }
+
   public static function &favourites()
   {
     return static::array("favourites");
@@ -28,5 +33,10 @@ class Session
       $_SESSION[$key] = [];
 
     return $_SESSION[$key];
+  }
+
+  private static function unset($key)
+  {
+    unset($_SESSION[$key]);
   }
 }

@@ -15,10 +15,12 @@ class Helper
   {
     $errors = &Session::errors();
     if (count($errors) !== 0) {
+      echo "<ul class=\"errors\">";
       foreach ($errors as $error) {
-        echo "<p>$error</p>";
+        echo "<li>$error</li>";
       }
-      unset($errors);
+      echo "</ul>";
+      Session::clearErrors();
     }
   }
 }

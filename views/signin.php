@@ -1,15 +1,16 @@
-<?php
-app\Helper::showErrors();
-?>
+<h1>Sign in to your account</h1>
+<?php app\Helper::showErrors(); ?>
 <form action="/signin" method="POST">
-  <div>
-    <label for="text">Login</label>
-    <input type="text" name="login">
+  <div class="form-container">
+    <div class="input-group">
+      <label for="login">Login</label>
+      <input type="text" name="login" id="login" required>
+    </div>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    <button>Sign in</button>
   </div>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" name="password">
-  </div>
-  <button>Sign in</button>
 </form>
-<a href="/signup">Sign up</a>
+<a href="/signup" class="form-link">Sign up</a>
