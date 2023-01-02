@@ -77,9 +77,9 @@ class Photo
 
   public static function findMany($ids)
   {
-    $idObjects = array_map(function ($id) {
-      return new ObjectId($id);
-    }, $ids);
+    $idObjects = [];
+    foreach ($ids as $id)
+      $idObjects[] = new ObjectId($id);
 
     $response = Database::getCollection(self::COLLECTION)->find([
       "_id" => ["\$in" => $idObjects]
