@@ -4,14 +4,13 @@ namespace app;
 
 class Router
 {
-    private $routes;
+    private static $routes = [];
     private $currentRoute;
     private $params = [];
 
     public function __construct()
     {
-        $routesPath = __DIR__ . "/config/routes.yaml";
-        $this->routes = yaml_parse_file($routesPath);
+        require_once __DIR__ . "/config/routes.php";
     }
 
     public function getCurrentRoute()
@@ -26,11 +25,11 @@ class Router
 
     public function resolveRoute(): bool
     {
-        foreach ($this->routes as $route) {
+        foreach (static::$routes as $route) {
             $path = trim(explode("?", $_SERVER["REQUEST_URI"])[0], "/");
             $route["path"] = trim($route["path"], "/");
 
-            if ($this->comparePaths($path, $route["path"], $route["method"] ?? "GET")) {
+            if ($this->comparePaths($path, $route["path"], $route["method"])) {
                 $this->currentRoute = $route;
 
                 $explodedController = explode("::", $route["controller"]);
@@ -57,6 +56,11 @@ class Router
         $notFoundView = new View("404", "404");
         echo $notFoundView->render();
         exit;
+    }
+
+    public static function addRoute($path, $controller, $method = "GET")
+    {
+        static::$routes[] = ["path" => $path, "controller" => $controller, "method" => $method];
     }
 
     private function comparePaths($sourcePath, $targetPath, $method): bool
