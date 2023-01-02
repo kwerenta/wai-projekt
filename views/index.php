@@ -1,5 +1,6 @@
 <h1>Formula One Gallery</h1>
 <?php app\Helper::showErrors(); ?>
+<?php app\Helper::showNotices(); ?>
 <form method="POST" action="/photos" enctype="multipart/form-data">
   <div class="form-container">
     <div class="input-group">
@@ -12,7 +13,7 @@
     </div>
     <div class="input-group">
       <label for="author">Author</label>
-      <input type="text" name="author" id="author" <?= (app\Helper::isLoggedIn() ? "value=\"" . app\Session::user()->login . "\" disabled" : "required") ?>>
+      <input type="text" name="author" id="author" <?= (app\Helper::isLoggedIn() ? "value=\"" . app\models\User::find(app\Session::user_id())->login . "\" disabled" : "required") ?>>
     </div>
     <div class="input-group">
       <label for="watermark">Watermark</label>

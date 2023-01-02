@@ -16,8 +16,8 @@ class View
 
     public function render($params = [])
     {
-        $layout = $this->getContent("layouts/$this->layoutName");
-        $view = $this->getContent($this->viewName, $params);
+        $layout = $this->getContent("layouts/$this->layoutName", false);
+        $view = $this->getContent($this->viewName, true, $params);
 
         return str_replace("{{yield}}", $view, $layout);
     }
@@ -32,12 +32,16 @@ class View
         $this->viewName = $name;
     }
 
-    private function getContent($path, $params = [])
+    private function getContent($path, $isRequired, $params = [])
     {
         ob_start();
         extract($params, EXTR_SKIP);
         extract($this->data, EXTR_SKIP);
-        include_once __DIR__ . "/views/" . $path . ".php";
+        $path = __DIR__ . "/views/" . $path . ".php";
+        if ($isRequired)
+            include_once $path;
+        else
+            require_once $path;
         return ob_get_clean();
     }
 }

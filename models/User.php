@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\Database;
+use MongoDB\BSON\ObjectId;
 
 class User
 {
@@ -50,7 +51,20 @@ class User
     ]);
   }
 
-  public static function find($login)
+  public static function find($id)
+  {
+    try {
+      $response = Database::getCollection(self::COLLECTION)->findOne([
+        "_id" => new ObjectId($id)
+      ]);
+      if (!$response) return null;
+      return new User($response["email"], $response["login"], $response["password"], $response["_id"]);
+    } catch (\Exception $e) {
+      return null;
+    }
+  }
+
+  public static function findByLogin($login)
   {
     $response = Database::getCollection(self::COLLECTION)->findOne([
       "login" => $login

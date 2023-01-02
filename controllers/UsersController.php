@@ -55,7 +55,7 @@ class UsersController extends ApplicationController
       Router::redirect("/signin");
     }
 
-    $user = User::find($_POST["login"]);
+    $user = User::findByLogin($_POST["login"]);
 
     if (!$user) {
       $errors[] = "User with that login doesn't exist.";
@@ -68,8 +68,10 @@ class UsersController extends ApplicationController
     }
 
     session_regenerate_id();
-    $sessionUser = &Session::user();
-    $sessionUser = $user;
+    $sessionUser = &Session::user_id();
+    $sessionUser = $user->getId();
+    $notices = &Session::notices();
+    $notices[] = "Successfully logged in.";
     Router::redirect("/");
   }
 

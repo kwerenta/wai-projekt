@@ -51,11 +51,20 @@
   border-radius: 0.5rem;
 }
 
-.errors {
-  background-color: hsl(0, 99%, 75%);
+.errors,
+.notices {
   padding-block: 1rem;
   border-radius: 0.25rem;
+}
+
+.errors {
+  background-color: hsl(0, 99%, 75%);
   color: black;
+}
+
+.notices {
+  background-color: green;
+  color: white;
 }
 
 .form-link {

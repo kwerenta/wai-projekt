@@ -131,7 +131,7 @@ class Photo
 
   private static function getUserId()
   {
-    return Helper::isLoggedIn() ? Session::user()->getId() : null;
+    return Helper::isLoggedIn() ? User::find(Session::user_id())->getId() : null;
   }
 
   private static function privateFilter()

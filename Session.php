@@ -14,17 +14,27 @@ class Session
     static::unset("errors");
   }
 
+  public static function &notices()
+  {
+    return static::array("notices");
+  }
+
+  public static function clearNotices()
+  {
+    static::unset("notices");
+  }
+
   public static function &favourites()
   {
     return static::array("favourites");
   }
 
-  public static function &user()
+  public static function &user_id()
   {
-    if (!isset($_SESSION["user"]))
-      $_SESSION["user"] = null;
+    if (!isset($_SESSION["user_id"]))
+      $_SESSION["user_id"] = null;
 
-    return $_SESSION["user"];
+    return $_SESSION["user_id"];
   }
 
   private static function &array($key)

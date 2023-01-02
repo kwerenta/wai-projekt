@@ -4,8 +4,11 @@ namespace app\controllers\photos;
 
 use app\controllers\ApplicationController;
 use app\models\Photo;
+use app\models\User;
 use app\Helper;
 use app\Router;
+use app\services\ThumbnailCreator;
+use app\services\WatermarkCreator;
 use app\Session;
 
 class PhotosController extends ApplicationController
@@ -56,7 +59,7 @@ class PhotosController extends ApplicationController
 			$errors[] = "Invalid file type.";
 		}
 
-		$currentUser = Session::user();
+		$currentUser = User::find(Session::user_id());
 		$author = Helper::isLoggedIn() ? $currentUser->login : (empty($_POST["author"]) ? null : $_POST["author"]);
 
 		if (!$this->validateRequiredFields(["title", "watermark"]) || $author === null) {
@@ -69,11 +72,9 @@ class PhotosController extends ApplicationController
 		$fileName =  uniqid() . time() . $extension;
 		$targetPath = IMAGES_PATH . $fileName;
 
-		$thumbnail = imagescale($image, 200, 125);
-		imagepng($thumbnail, IMAGES_PATH . "thumbnail_" . $fileName);
-		imagedestroy($thumbnail);
 
-		$this->createWatermark($image, $fileName);
+		ThumbnailCreator::call($image, $fileName);
+		WatermarkCreator::call($image, $fileName);
 
 		$privateOwner = Helper::isLoggedIn() && isset($_POST["isPrivate"]) && $_POST["isPrivate"] === "true" ? $currentUser->getId() : null;
 		$photo = new Photo($_POST["title"], $fileName, $author, $privateOwner);
@@ -81,24 +82,5 @@ class PhotosController extends ApplicationController
 
 		move_uploaded_file($file["tmp_name"], $targetPath);
 		Router::redirect("/photos");
-	}
-
-	private function createWatermark($image, $name)
-	{
-		$font = ROOT_PATH . "/static/fonts/Poppins-Regular.ttf";
-
-		$watermarkBox = imagettfbbox(16, 0, $font, $_POST["watermark"]);
-		$watermarkX = $watermarkBox[2] - $watermarkBox[0];
-		$watermarkY = $watermarkBox[3] - $watermarkBox[5];
-
-		$watermark = imagecreatetruecolor($watermarkX + 16, $watermarkY + 16);
-		imagefilledrectangle($watermark, 0, 0, $watermarkX + 16, $watermarkY + 16, 0xFFFFFF);
-		imagettftext($watermark, 16, 0, 8, $watermarkY + 8, 0x000000, $font, $_POST["watermark"]);
-
-		imagecopymerge($image, $watermark, (imagesx($image) - imagesx($watermark) - 16) / 2, (imagesy($image) - imagesy($watermark) - 16) / 2, 0, 0, $watermarkX + 16, $watermarkY + 16, 50);
-		imagepng($image, IMAGES_PATH . "watermark_" . basename($name));
-
-		imagedestroy($image);
-		imagedestroy($watermark);
 	}
 }

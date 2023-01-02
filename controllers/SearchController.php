@@ -15,7 +15,12 @@ class SearchController extends ApplicationController
     }
 
     $photos = Photo::search($_GET["query"]);
+    $this->generateHTMLResponse($photos);
+    exit;
+  }
 
+  private function generateHTMLResponse($photos)
+  {
     foreach ($photos as $photo) : ?>
       <div class="photo">
         <?php if ($photo->privateOwner !== null) : ?>
@@ -38,6 +43,5 @@ class SearchController extends ApplicationController
         </a>
       </div>
 <?php endforeach;
-    exit;
   }
 }
