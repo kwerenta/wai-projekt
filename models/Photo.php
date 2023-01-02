@@ -66,7 +66,8 @@ class Photo
   {
     try {
       $response = Database::getCollection(self::COLLECTION)->findOne([
-        "_id" => new ObjectId($id)
+        "_id" => new ObjectId($id),
+        "privateOwner" => static::privateFilter()
       ]);
       if ($response == null) return null;
       return new Photo($response["title"], $response["name"], $response["author"], $response["privateOwner"] ?? NULL, $response["_id"]);
